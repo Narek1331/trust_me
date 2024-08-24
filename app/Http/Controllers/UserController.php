@@ -27,7 +27,8 @@ class UserController extends Controller
 
         $this->userService->updateProfile($request->all(), $request->file('avatar'));
 
-        return redirect()->back()->with('status', 'Profile updated successfully.');
+        return redirect()->back()->with('status', 'Профиль успешно обновлён.');
+
     }
 
     public function updatePassword(Request $request)
@@ -39,7 +40,8 @@ class UserController extends Controller
 
         $this->userService->updatePassword($request->all());
 
-        return redirect()->back()->with('status', 'Password updated successfully.');
+        return redirect()->back()->with('status', 'Пароль успешно обновлён.');
+
     }
 
     public function comments()

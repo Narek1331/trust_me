@@ -36,6 +36,6 @@ class FeedbackController extends Controller
     {
         $feedback = $this->feedbackService->store($request->all());
 
-        return redirect()->back();
+        return redirect()->back()->with('status','Сообщение успешно отправлено');
     }
 }

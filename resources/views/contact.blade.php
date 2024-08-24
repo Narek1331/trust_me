@@ -34,6 +34,15 @@
                     <label for="field" class="form-label">Текст сообщения</label>
                     <textarea name="text" id="field" class="form-control" maxlength="5000" rows="5" required></textarea>
                 </div>
+
+                <div class="mb-3">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="captcha-addon">
+                            @captcha
+                        </span>
+                        <input required type="text" class="form-control" aria-describedby="captcha-addon" id="captcha" name="captcha" autocomplete="off">
+                    </div>
+                </div>
                 <button type="submit" class="btn btn-primary">Отправить</button>
             </form>
         </div>

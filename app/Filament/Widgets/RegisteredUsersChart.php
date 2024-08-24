@@ -5,14 +5,16 @@ namespace App\Filament\Widgets;
 use Filament\Widgets\ChartWidget;
 use App\Models\User;
 use Carbon\Carbon;
+use App\Traits\Widgets\DateRangeTrait;
 
 class RegisteredUsersChart extends ChartWidget
 {
+    use DateRangeTrait;
     protected static ?int $sort = 1;
 
     protected static ?string $heading = 'Зарегистрированные пользователи';
 
-    // protected int | string | array $columnSpan = 'full';
+    protected int | string | array $columnSpan = 2;
 
 
     protected function getData(): array
@@ -24,10 +26,20 @@ class RegisteredUsersChart extends ChartWidget
             })
             // ->where('created_at', '>=', Carbon::now()->subDays(30))
             ->groupBy('date')
-            ->orderBy('date')
-            ->get()
-            ->pluck('count', 'date')
-            ->toArray();
+            ->orderBy('date');
+
+
+        if($this->fromDate) {
+            $users = $users->whereDate('created_at', '>=', $this->fromDate);
+        }
+
+        if($this->toDate) {
+            $users = $users->whereDate('created_at', '<=', $this->toDate);
+        }
+
+        $users = $users->get()
+        ->pluck('count', 'date')
+        ->toArray();
 
         $totalUsers = array_sum($users);
 

@@ -26,6 +26,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::group(['prefix'=>'search'], function () {
     Route::get('/{checkSlug}/{q}', [SearchController::class, 'index'])->name('search');
+    Route::get('/latest', [SearchController::class, 'latest'])->name('search.latest');
 });
 
 Route::group(['prefix'=>'top'], function () {
@@ -43,9 +44,7 @@ Route::group(['prefix'=>'category'], function () {
 });
 
 Route::group(['prefix'=>'comment'], function () {
-    Route::group(['middleware' => 'auth'], function () {
-        Route::post('/comment', [CommentController::class, 'store'])->name('comment.store');
-    });
+    Route::post('/comment', [CommentController::class, 'store'])->name('comment.store');
 });
 
 Route::group(['prefix'=>'profile','middleware'=>'auth'], function () {

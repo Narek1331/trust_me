@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Comment;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Rules\NoScriptCode;
 
 class StoreRequest extends FormRequest
 {
@@ -22,7 +23,9 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'text' => 'required|string|max:25555'
+            'text' =>  ['required', 'string', 'max:25555', new NoScriptCode],
+            'captcha' => 'required|captcha'
+
         ];
     }
 }

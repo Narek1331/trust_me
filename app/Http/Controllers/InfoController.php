@@ -17,7 +17,7 @@ class InfoController extends Controller
     public function store(InfoStoreRequest $request)
     {
         $info = $this->infoService->store($request->search);
-        return redirect()->back();
+        return redirect()->back()->with('status','Успешно отправлено');
     }
 
 }

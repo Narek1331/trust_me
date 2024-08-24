@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Info;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Rules\NoScriptCode;
 
 class StoreRequest extends FormRequest
 {
@@ -22,7 +23,7 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'search' => 'required|max:255'
+            'search' =>  ['required', 'string', 'max:25555', new NoScriptCode],
         ];
     }
 }

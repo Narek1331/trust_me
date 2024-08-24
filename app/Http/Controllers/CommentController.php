@@ -17,6 +17,6 @@ class CommentController extends Controller
     public function store(CommentStoreRequest $request)
     {
         $comment = $this->commentService->store($request->all());
-        return redirect()->back();
+        return redirect()->back()->with('status','Комментарий успешно сохранен');
     }
 }

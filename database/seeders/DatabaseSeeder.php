@@ -11,6 +11,7 @@ use Database\Seeders\{
     CheckSeeder,
     ReviewTypeSeeder,
     RatingSeeder,
+    AdCategorySeeder,
 };
 
 class DatabaseSeeder extends Seeder
@@ -26,6 +27,7 @@ class DatabaseSeeder extends Seeder
             CheckSeeder::class,
             ReviewTypeSeeder::class,
             RatingSeeder::class,
+            AdCategorySeeder::class
         ]);
     }
 }

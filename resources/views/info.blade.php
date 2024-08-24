@@ -238,10 +238,12 @@ foreach ($ratingTypes as $ratingType) {
                                     <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M16 3C8.83203 3 3 8.83203 3 16C3 23.168 8.83203 29 16 29C23.168 29 29 23.168 29 16C29 8.83203 23.168 3 16 3ZM16 5C22.0859 5 27 9.91406 27 16C27 22.0859 22.0859 27 16 27C9.91406 27 5 22.0859 5 16C5 9.91406 9.91406 5 16 5ZM16 8C13.25 8 11 10.25 11 13C11 14.5156 11.707 15.8633 12.7812 16.7812C10.5312 17.9492 9 20.3008 9 23H11C11 20.2266 13.2266 18 16 18C18.7734 18 21 20.2266 21 23H23C23 20.3008 21.4688 17.9492 19.2188 16.7812C20.293 15.8633 21 14.5156 21 13C21 10.25 18.75 8 16 8ZM16 10C17.668 10 19 11.332 19 13C19 14.668 17.668 16 16 16C14.332 16 13 14.668 13 13C13 11.332 14.332 10 16 10Z" fill="currentcolor"></path>
                                     </svg>
-                                    @if (auth() && auth()->user() && $comment->user_id == auth()->user()->id)
-                                        Это я
-                                    @else
-                                    {{$comment->user->name}}
+                                    @if($comment->user_id)
+                                        @if (auth()->user() && $comment->user_id == auth()->user()->id)
+                                            Это я
+                                        @else
+                                        {{$comment->user->name}}
+                                        @endif
                                     @endif
                                 </a>
                             </div>
@@ -257,7 +259,7 @@ foreach ($ratingTypes as $ratingType) {
     @else
         <div class="text-center mb-4">Пока нет ни одного отзыва, Вы можете быть первым!</div>
     @endif
-    @if(auth() && auth()->user() && (isset($comments) && !$comments->where('user_id',auth()->user()->id)->count()))
+    {{-- @if(auth() && auth()->user() && (isset($comments) && !$comments->where('user_id',auth()->user()->id)->count())) --}}
     <div class="card mb-4 bg-white">
         <div class="card-body">
             <form action="{{route('comment.store')}}" method="post">
@@ -306,11 +308,57 @@ foreach ($ratingTypes as $ratingType) {
                         @endforeach
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary">Оценить аккаунт</button>
+                <div class="mt-4">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="captcha-addon">
+                            @captcha
+                        </span>
+                        <input required type="text" class="form-control" aria-describedby="captcha-addon" id="captcha" name="captcha" autocomplete="off">
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary">Оценить аккаунт</button>
+                </div>
             </form>
         </div>
     </div>
-    @endif
+    {{-- @endif --}}
+
+    @if (isset($domainInfo['ip']) && isset($allDomains) && count($allDomains))
+
+    <div class="container py-4">
+        <div class="card bg-white">
+          <div class="card-body">
+            <h4 class="card-title mb-3">Все сайты на этом IP</h4>
+            <div class="d-flex align-items-center mb-3">
+              <div class="fs-5">{{$domainInfo['ip']}}</div>
+            </div>
+            <div id="load_more">
+              <div class="list-group">
+                @foreach ($allDomains as $domain)
+                <a href="{{route('search',['checkSlug'=>'site','q'=>$domain])}}" target="_blank" class="list-group-item list-group-item-action d-flex align-items-center">
+                    <i class="fa fa-globe me-2" aria-hidden="true"></i>
+                    {{$domain}}
+                  </a>
+                @endforeach
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      @endif
+
+        @if (isset($searches) && !empty($searches))
+
+        <div class="container py-4">
+                <div class="card bg-white">
+                    <canvas id="myChart"></canvas>
+                </div>
+            </div>
+        @endif
+
+
 </div>
 @endsection
 
@@ -360,4 +408,74 @@ foreach ($ratingTypes as $ratingType) {
         padding-top: 15px;
     }
 </style>
+@endsection
+
+@section('js')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const chartElement = document.getElementById('myChart');
+
+        if (chartElement) {
+            const ctx = chartElement.getContext('2d');
+
+            // Example of data from the backend
+            const searches = @json($searches);
+
+            // Process the data
+            const labels = searches.map(item => item.date);
+            const dataCounts = searches.map(item => item.count);
+
+            // Create the chart
+            new Chart(ctx, {
+                type: 'line', // Change to 'bar' if you prefer a bar chart
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Количество поисков',
+                        data: dataCounts,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Дата'
+                            },
+                            ticks: {
+                                autoSkip: false, // Adjust as needed to avoid cluttering
+                                maxRotation: 90, // Rotate labels if needed
+                                minRotation: 45 // Rotate labels if needed
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Количество'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    });
+</script>
+
+@endsection
+
+@section('head')
+<meta name="description" content="Результаты поиска по запросу {{ request()->route('q') }} в категории {{ request()->route('checkSlug') }}">
+<meta name="keywords" content="поиск, {{ request()->route('q') }}, {{ request()->route('checkSlug') }}">
+<meta property="og:title" content="Результаты поиска по запросу {{ request()->route('q') }}">
+<meta property="og:description" content="Найдите результаты поиска по запросу {{ request()->route('q') }} в категории {{ request()->route('checkSlug') }}">
+<meta property="og:image" content="{{logoPath()}}">
+<meta property="og:url" content="{{ url()->current() }}">
+<meta property="og:type" content="website">
+<title>Результаты поиска по запросу {{ request()->route('q') }}</title>
 @endsection

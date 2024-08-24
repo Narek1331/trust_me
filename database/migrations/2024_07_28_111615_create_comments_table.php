@@ -14,17 +14,17 @@ return new class extends Migration
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
             $table->string('search')->nullable();
-            $table->unsignedBigInteger('user_id');
+            $table->bigInteger('user_id')->nullable();
             $table->unsignedBigInteger('review_type_id');
             $table->unsignedBigInteger('check_id');
             $table->bigInteger('parent_id')->nullable();
             $table->longText('text')->nullable();
             $table->timestamps();
 
-            $table->foreign('user_id')
-            ->references('id')
-            ->on('users')
-            ->onDelete('cascade');
+            // $table->foreign('user_id')
+            // ->references('id')
+            // ->on('users')
+            // ->onDelete('cascade');
 
             $table->foreign('review_type_id')
             ->references('id')

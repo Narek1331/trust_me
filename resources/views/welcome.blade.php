@@ -48,29 +48,30 @@
                 </form>
             </div>
         </div>
+        @if($newsCategories && count($newsCategories))
+            <div class="container my-5">
+                <div class="mb-4">
+                    <h2 class="text-center">Разделы статей</h2>
+                </div>
 
-        <div class="container my-5">
-            <div class="mb-4">
-                <h2 class="text-center">Разделы статей</h2>
-            </div>
-
-            <div class="row g-4">
-                @foreach ($newsCategories as $newsCategory)
-                    <div class="col-md-4 col-sm-6">
-                        <a href="{{route('category.show',['id'=>$newsCategory->id])}}" class="text-decoration-none text-reset">
-                            <div class="card h-100 shadow-sm">
-                                <img src="/storage/{{$newsCategory->img_path}}" class="card-img-top" alt="{{$newsCategory->title}}" style="height: 200px; object-fit: cover;">
-                                <div class="card-body">
-                                    <h5 class="card-title text-center">
-                                        {{$newsCategory->title}}
-                                    </h5>
+                <div class="row g-4">
+                    @foreach ($newsCategories as $newsCategory)
+                        <div class="col-md-4 col-sm-6">
+                            <a href="{{route('category.show',['id'=>$newsCategory->id])}}" class="text-decoration-none text-reset">
+                                <div class="card h-100 shadow-sm">
+                                    <img src="/storage/{{$newsCategory->img_path}}" class="card-img-top" alt="{{$newsCategory->title}}" style="height: 200px; object-fit: cover;">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-center">
+                                            {{$newsCategory->title}}
+                                        </h5>
+                                    </div>
                                 </div>
-                            </div>
-                        </a>
-                    </div>
-                @endforeach
+                            </a>
+                        </div>
+                    @endforeach
+                </div>
             </div>
-        </div>
+        @endif
     </div>
 @endsection
 

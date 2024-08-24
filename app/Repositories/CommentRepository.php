@@ -26,6 +26,7 @@ class CommentRepository{
         return Comment::where('search', $search)
         ->with(['positiveRates','negativeRates'])
         ->where('check_id',$checkId)
+        ->orderBy('created_at','desc')
         ->get();
     }
 

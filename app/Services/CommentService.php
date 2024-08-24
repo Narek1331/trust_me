@@ -12,7 +12,7 @@ class CommentService{
     {
         $comment = $this->commentRepository->store(
             $data['search'],
-            auth()->user()->id,
+            auth()->user() ? auth()->user()->id : null,
             $data['review_type_id'],
             $data['check_id'],
             $data['text']

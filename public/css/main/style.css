@@ -91,6 +91,7 @@
   background-color: rgba(39, 60, 97, 0.788);
   padding: 25px;
   margin: 15px;
+  border-radius: 0.5rem;
 }
 
 .button-search-container .input-group {

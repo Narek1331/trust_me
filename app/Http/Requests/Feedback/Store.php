@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Feedback;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Rules\NoScriptCode;
 
 class Store extends FormRequest
 {
@@ -22,10 +23,32 @@ class Store extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:250',
-            'email' => 'required|string|email|max:250',
-            'title' => 'required|string|max:250',
-            'text' => 'required|string|max:25000'
+            'name' => [
+                'required',
+                'string',
+                'max:250',
+                new NoScriptCode,
+            ],
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:250',
+            ],
+            'title' => [
+                'required',
+                'string',
+                'max:250',
+                new NoScriptCode,
+            ],
+            'text' => [
+                'required',
+                'string',
+                'max:25000',
+                new NoScriptCode,
+            ],
+            'captcha' => 'required|captcha'
+
         ];
     }
 }
